@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 handler.sendEmptyMessage(0);
                                             }
                                         }else {
+
                                             runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
