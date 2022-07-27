@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">射击训练分析系统Demo</string>
+    <string name="analysis_system">分析系统</string>
+    <string name="serialport_name">串口名称：</string>
+    <string name="baud_rate">波特率：</string>
+    <string name="system_name">射击训练分析系统</string>
+    <string name="date">日期</string>
+    <string name="person">人员</string>
+    <string name="_50target">50米靶</string>
+    <string name="path">轨迹</string>
+    <string name="main_title">射击模拟训练系统</string>
+    <string name="shutdown">关闭</string>
+    <string name="shut_down">关机</string>
+    <string name="setting">设置</string>
+    <string name="record">历史</string>
+</resources>
