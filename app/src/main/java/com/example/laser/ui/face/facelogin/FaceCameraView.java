@@ -6,6 +6,7 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -119,7 +120,7 @@ public class FaceCameraView extends SurfaceView implements SurfaceHolder.Callbac
     private void initCamera() {
         try {
             mCamera.setPreviewDisplay(getHolder());//当前控件显示相机数据
-            mCamera.setDisplayOrientation(90);//调整预览角度
+            mCamera.setDisplayOrientation(0);//调整预览角度
             setCameraParameters();
             startPreview();//打开相机
         } catch (Exception e) {
@@ -132,6 +133,7 @@ public class FaceCameraView extends SurfaceView implements SurfaceHolder.Callbac
      */
     private void setCameraParameters() {
         Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setPreviewFormat(ImageFormat.NV21);
         List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
         //确定前面定义的预览宽高是camera支持的，不支持取就更大的
         for (int i = 0; i < sizes.size(); i++) {
@@ -141,8 +143,9 @@ public class FaceCameraView extends SurfaceView implements SurfaceHolder.Callbac
                 break;
             }
         }
+
         //设置最终确定的预览大小
-        parameters.setPreviewSize(screenWidth, screenHeight);
+        parameters.setPreviewSize(1280, 720);
         mCamera.setParameters(parameters);
     }
 
@@ -173,7 +176,7 @@ public class FaceCameraView extends SurfaceView implements SurfaceHolder.Callbac
      */
     public void startPreview() {
         if (mCamera != null) {
-            mCamera.addCallbackBuffer(new byte[((screenWidth * screenHeight) * ImageFormat.getBitsPerPixel(ImageFormat.NV21)) / 8]);
+            mCamera.addCallbackBuffer(new byte[((screenWidth * screenHeight) * ImageFormat.getBitsPerPixel(ImageFormat.NV21)) *8]);
             mCamera.setPreviewCallbackWithBuffer(this);
             mCamera.startPreview();
             if (isSupportAutoFocus) {

@@ -1,6 +1,8 @@
 package com.example.laser.serialport;
 
 
+import android.util.Log;
+
 import com.example.laser.api.api;
 import com.example.laser.message.RockerMessage;
 import com.vondear.rxtool.RxLogTool;
@@ -64,6 +66,7 @@ public class GunDetectThread extends Thread {
                 EventBus.getDefault().post(rockerMessage);
                 isD = true;
                 RxLogTool.e(TAG, "枪掉线");
+
             }
 
         }

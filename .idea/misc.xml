@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/drawable/shape_longin.xml" value="0.2575" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_bluetooth.xml" value="0.11510416666666666" />
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_camera2.xml" value="0.18046875" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_facelogin.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_history.xml" value="0.11822916666666666" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_login.xml" value="0.1" />
@@ -11,6 +13,7 @@
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_main2.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_psychology.xml" value="0.11041666666666666" />
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_to_lead.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_witness_check.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/dialog_loport.xml" value="0.11822916666666666" />
         <entry key="..\:/AndroidStudioProjects2/laser/app/src/main/res/drawable/shape_bian3.xml" value="0.264" />

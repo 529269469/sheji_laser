@@ -2,18 +2,39 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:ignore="MissingDefaultResource">
-    <Button
+    <TextView
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/shape_longin"
+        android:gravity="center"
         android:id="@+id/bt_initfacedata"
         android:text="录入人脸信息"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+    <TextView
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/shape_longin"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
         android:id="@+id/bt_facelogin"
         android:text="人脸登录"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/shape_longin"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
+        android:id="@+id/bt_facelogins"
+        android:text="导入数据"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.laser.ui.face.facelogin;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -10,6 +11,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -23,9 +25,12 @@ import com.seeta.sdk.SeetaRect;
 import java.io.ByteArrayOutputStream;
 
 public class FaceInitActivity extends AppCompatActivity {
+    private static final String TAG = "FaceInitActivity";
     private FaceCameraView faceInitCameraView;
     private boolean isScanning = false;
-    Handler handler = new Handler() {
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -44,7 +49,8 @@ public class FaceInitActivity extends AppCompatActivity {
         faceInitCameraView.setPreviewCallback(new FaceCameraView.PreviewCallback() {
             @Override
             public void onPreview(final byte[] data, final Camera camera) {
-                if(FaceEngine.FACEDETECTOR!=null&&FaceEngine.FACERECOGNIZER!=null&&FaceEngine.POINTDETECTOR!=null){
+                Log.e(TAG, "initView: ");
+                if (FaceEngine.FACEDETECTOR != null && FaceEngine.FACERECOGNIZER != null && FaceEngine.POINTDETECTOR != null) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -62,17 +68,17 @@ public class FaceInitActivity extends AppCompatActivity {
                                         Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
                                         //纠正图像的旋转角度问题
                                         Matrix m = new Matrix();
-                                        m.setRotate(-90, (float) bmp.getWidth() / 2, (float) bmp.getHeight() / 2);
+                                        m.setRotate(0, (float) bmp.getWidth() / 2, (float) bmp.getHeight() / 2);
                                         Bitmap bm = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
                                         SeetaImageData RegistSeetaImageData = ConvertUtil.ConvertToSeetaImageData(bm);
                                         SeetaRect[] faceRects = FaceEngine.FACEDETECTOR.Detect(RegistSeetaImageData);
-                                        if(faceRects.length>0){
+                                        if (faceRects.length > 0) {
                                             //获取人脸区域（这里只有一个所以取0）
                                             SeetaRect faceRect = faceRects[0];
                                             SeetaPointF[] seetaPoints = FaceEngine.POINTDETECTOR.Detect(RegistSeetaImageData, faceRect);//根据检测到的人脸进行特征点检测
                                             FaceEngine.FACERECOGNIZER.Register(RegistSeetaImageData, seetaPoints);//将人脸注册到SeetaFace2数据库
                                             handler.sendEmptyMessage(0);
-                                        }else {
+                                        } else {
                                             //如果检测不到人脸给予如下提示
                                             runOnUiThread(new Runnable() {
                                                 @Override

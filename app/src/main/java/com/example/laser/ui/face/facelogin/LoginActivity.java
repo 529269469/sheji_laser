@@ -1,5 +1,7 @@
 package com.example.laser.ui.face.facelogin;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.laser.R;
+import com.example.laser.ui.MainActivity;
+import com.example.laser.ui.face.WitnessCheckActivity;
 import com.seeta.sdk.SeetaImageData;
 import com.seeta.sdk.SeetaPointF;
 import com.seeta.sdk.SeetaRect;
@@ -26,14 +30,15 @@ public class LoginActivity extends AppCompatActivity {
     private FaceCameraView faceCameraView;
     private boolean isScanning = false;
     private int failedCount = 0;//失败次数
-    Handler handler = new Handler() {
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 case 0:
                     failedCount++;
-                    if(failedCount>=5){
+                    if(failedCount==5){
                         Toast.makeText(LoginActivity.this, "人脸不匹配，登录失败", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -41,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case 1:
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                     break;
             }
@@ -75,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
                                         //纠正图像的旋转角度问题
                                         Matrix m = new Matrix();
-                                        m.setRotate(-90, (float) bmp.getWidth() / 2, (float) bmp.getHeight() / 2);
+                                        m.setRotate(0, (float) bmp.getWidth() / 2, (float) bmp.getHeight() / 2);
                                         Bitmap bm = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
                                         SeetaImageData loginSeetaImageData = ConvertUtil.ConvertToSeetaImageData(bm);
                                         SeetaRect[] faceRects = FaceEngine.FACEDETECTOR.Detect(loginSeetaImageData);
@@ -92,11 +98,8 @@ public class LoginActivity extends AppCompatActivity {
                                             }
                                         }else {
 
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
+                                            runOnUiThread(() -> {
 //                                                    Toast.makeText(LoginActivity.this, "请保持手机不要晃动", Toast.LENGTH_SHORT).show();
-                                                }
                                             });
                                             isScanning = false;
                                         }
