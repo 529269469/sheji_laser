@@ -5,9 +5,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -19,11 +21,14 @@ import java.net.Socket;
 public class TcpClient {
     /**
      * single instance TcpClient
-     * */
+     */
     private static TcpClient mSocketClient = null;
-    private TcpClient(){}
-    public static TcpClient getInstance(){
-        if(mSocketClient == null){
+
+    private TcpClient() {
+    }
+
+    public static TcpClient getInstance() {
+        if (mSocketClient == null) {
             synchronized (TcpClient.class) {
                 mSocketClient = new TcpClient();
             }
@@ -36,30 +41,32 @@ public class TcpClient {
     private Socket mSocket;
 
     private OutputStream mOutputStream;
+    private BufferedWriter writer;
     private InputStream mInputStream;
 
     private SocketThread mSocketThread;
     private boolean isStop = false;//thread flag
 
 
+
+
     /**
-     *  - 数据按照最长接收，一次性
-     * */
+     * - 数据按照最长接收，一次性
+     */
     private class SocketThread extends Thread {
 
         private String ip;
         private int port;
-        public SocketThread(String ip, int port){
+
+        public SocketThread(String ip, int port) {
             this.ip = ip;
             this.port = port;
         }
 
         @Override
         public void run() {
-            Log.d(TAG_log,"SocketThread start ");
+            Log.e(TAG_log, "SocketThread start ");
             super.run();
-
-            //connect ...
             try {
                 if (mSocket != null) {
                     mSocket.close();
@@ -67,86 +74,104 @@ public class TcpClient {
                 }
 
                 InetAddress ipAddress = InetAddress.getByName(ip);
-                mSocket = new Socket(ip, port);
+                try {
+                    mSocket = new Socket(ip, port);
+                    //阻塞停止，表示连接成功
+                    Log.e(TAG_log, "连接成功");
+                } catch (Exception e) {
+                    Log.e(TAG_log, "连接服务器时异常");
+                    e.printStackTrace();
+                    return;
+                }
 
-                //设置不延时发送
-                //mSocket.setTcpNoDelay(true);
-                //设置输入输出缓冲流大小
-                //mSocket.setSendBufferSize(8*1024);
-                //mSocket.setReceiveBufferSize(8*1024);
-
-                if(isConnect()){
+                if (isConnect()) {
+                    Log.e(TAG_log, "SocketThread connect 连接成功");
                     mOutputStream = mSocket.getOutputStream();
                     mInputStream = mSocket.getInputStream();
-
+                    writer = new BufferedWriter(new OutputStreamWriter(mSocket.getOutputStream()));
                     isStop = false;
 
                     uiHandler.sendEmptyMessage(1);
                 }
                 /* 此处这样做没什么意义不大，真正的socket未连接还是靠心跳发送，等待服务端回应比较好，一段时间内未回应，则socket未连接成功 */
-                else{
+                else {
                     uiHandler.sendEmptyMessage(-1);
-                    Log.e(TAG_log,"SocketThread connect fail");
+                    Log.e(TAG_log, "SocketThread connect fail");
                     return;
                 }
 
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 uiHandler.sendEmptyMessage(-1);
-                Log.e(TAG_log,"SocketThread connect io exception = "+e.getMessage());
+                Log.e(TAG_log, "SocketThread connect io exception = " + e.getMessage());
                 e.printStackTrace();
                 return;
             }
-            Log.d(TAG_log,"SocketThread connect over ");
-
+            Log.e(TAG_log, "SocketThread connect over ");
 
             //read ...
-            while (isConnect() && !isStop && !isInterrupted()) {
-
-                int size;
-                try {
-                    byte[] buffer = new byte[1024];
-                    if (mInputStream == null) return;
-                    size = mInputStream.read(buffer);//null data -1 , zrd serial rule size default 10
-                    if (size > 0) {
-                        Message msg = new Message();
-                        msg.what = 100;
-                        Bundle bundle = new Bundle();
-                        bundle.putByteArray("data",buffer);
-                        bundle.putInt("size",size);
-                        bundle.putInt("requestCode",requestCode);
-                        msg.setData(bundle);
-                        uiHandler.sendMessage(msg);
-                    }
-                    Log.i(TAG_log, "SocketThread read listening");
-                    //Thread.sleep(100);//log eof
-                }
-                catch (IOException e) {
-                    uiHandler.sendEmptyMessage(-1);
-                    Log.e(TAG_log,"SocketThread read io exception = "+e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
-            }
+//            while (isConnect() && !isStop && !isInterrupted()) {
+//
+//                int size;
+//                try {
+//                    byte[] buffer = new byte[1024];
+//                    if (mInputStream == null) return;
+//                    size = mInputStream.read(buffer);//null data -1 , zrd serial rule size default 10
+//                    if (size > 0) {
+//                        Message msg = new Message();
+//                        msg.what = 100;
+//                        Bundle bundle = new Bundle();
+//                        bundle.putByteArray("data", buffer);
+//                        bundle.putInt("size", size);
+//                        bundle.putInt("requestCode", requestCode);
+//                        msg.setData(bundle);
+//                        uiHandler.sendMessage(msg);
+//                    }
+////                    Log.e(TAG_log, "SocketThread read listening");
+//                    //Thread.sleep(100);//log eof
+//                } catch (IOException e) {
+//                    uiHandler.sendEmptyMessage(-1);
+//                    Log.e(TAG_log, "SocketThread read io exception = " + e.getMessage());
+//                    e.printStackTrace();
+//                    return;
+//                }
+//            }
         }
     }
 
 
-
     //==============================socket connect============================
+
+
+    /**
+     * 发送消息
+     */
+    public void sendStrSocket(final String senddata) {
+        new Thread(() -> {
+            try {
+                Log.e(TAG_log, "sendStrSocket:" + senddata);
+                writer.write(senddata);//"utf-8"
+                writer.flush();
+            } catch (Exception e) {
+                Log.e(TAG_log, "sendStrSocket:" + e.getMessage());
+            }
+        }).start();
+
+    }
+
+
     /**
      * connect socket in thread
      * Exception : android.os.NetworkOnMainThreadException
-     * */
-    public void connect(String ip, int port){
+     */
+    public void connect(String ip, int port) {
         mSocketThread = new SocketThread(ip, port);
         mSocketThread.start();
     }
 
     /**
      * socket is connect
-     * */
-    public boolean isConnect(){
+     */
+    public boolean isConnect() {
         boolean flag = false;
         if (mSocket != null) {
             flag = mSocket.isConnected();
@@ -156,7 +181,7 @@ public class TcpClient {
 
     /**
      * socket disconnect
-     * */
+     */
     public void disconnect() {
         isStop = true;
         try {
@@ -181,12 +206,11 @@ public class TcpClient {
     }
 
 
-
     /**
      * send byte[] cmd
      * Exception : android.os.NetworkOnMainThreadException
-     * */
-    public void sendByteCmd(final byte[] mBuffer,int requestCode) {
+     */
+    public void sendByteCmd(final byte[] mBuffer, int requestCode) {
         this.requestCode = requestCode;
 
         new Thread(() -> {
@@ -208,7 +232,7 @@ public class TcpClient {
      */
     public void sendStrCmds(String cmd, int requestCode) {
         byte[] mBuffer = cmd.getBytes();
-        sendByteCmd(mBuffer,requestCode);
+        sendByteCmd(mBuffer, requestCode);
     }
 
 
@@ -218,9 +242,8 @@ public class TcpClient {
     public void sendChsPrtCmds(String content, int requestCode) {
         try {
             byte[] mBuffer = content.getBytes("GB2312");
-            sendByteCmd(mBuffer,requestCode);
-        }
-        catch (UnsupportedEncodingException e1){
+            sendByteCmd(mBuffer, requestCode);
+        } catch (UnsupportedEncodingException e1) {
             e1.printStackTrace();
         }
     }
@@ -229,7 +252,7 @@ public class TcpClient {
     Handler uiHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch(msg.what){
+            switch (msg.what) {
                 //connect error
                 case -1:
                     if (null != onDataReceiveListener) {
@@ -263,16 +286,23 @@ public class TcpClient {
 
     /**
      * socket response data listener
-     * */
+     */
     private OnDataReceiveListener onDataReceiveListener = null;
     private int requestCode = -1;
+
     public interface OnDataReceiveListener {
         public void onConnectSuccess();
+
         public void onConnectFail();
+
         public void onDataReceive(byte[] buffer, int size, int requestCode);
     }
+
     public void setOnDataReceiveListener(
             OnDataReceiveListener dataReceiveListener) {
         onDataReceiveListener = dataReceiveListener;
     }
+
+
+
 }

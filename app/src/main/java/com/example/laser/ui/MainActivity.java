@@ -63,7 +63,6 @@ import com.example.laser.ui.entity.InfoEntity;
 import com.example.laser.ui.entity.ServerReceiveEntity;
 import com.example.laser.ui.entity.ShotEntity;
 import com.example.laser.ui.entity.TrackEntity;
-import com.example.laser.ui.face.WitnessCheckActivity;
 import com.example.laser.utils.PrintAchievement;
 import com.example.laser.utils.SpeechUtils;
 import com.example.laser.utils.TcpClient;
@@ -186,8 +185,10 @@ public class MainActivity extends AppCompatActivity {
         TargetType = getResources().getStringArray(R.array.img_x);
         initSoundPool();
         initVoice();
-        //TODO
-//        initSerial();
+        //TODO 自己平板测试关闭，正是环境打开
+        initSerial();
+
+
         getInfo();
         channel = RxSPTool.getInt(this, "Channel");
         GunVoiceEnable = RxSPTool.getBoolean(this, "GunVoice");
@@ -216,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
 //                RxLogTool.e("哈哈哈");
             }
         });
-
-
-
-
 
 
         handler = new Handler() {
@@ -335,9 +332,11 @@ public class MainActivity extends AppCompatActivity {
                             trackEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
                             trackEntity.setRingNumber(String.valueOf(trackValue.getRingNumber()));
                             try {
+                                //TODO Socket通信
                                 RxLogTool.e("trackEntity", GsonUtils.toJson(trackEntity));
-                                tcpClient.sendByteCmd(GsonUtils.toJson(trackEntity).getBytes("GBK"), 2);
-                            } catch (UnsupportedEncodingException e) {
+                                tcpClient.sendStrSocket(GsonUtils.toJson(trackEntity));
+//                                tcpClient.sendByteCmd(GsonUtils.toJson(trackEntity).getBytes("UTF-8"), 2);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -390,11 +389,12 @@ public class MainActivity extends AppCompatActivity {
                         shotEntity.setTargetBureauId(activityMainBinding.mainTextJuId.getText().toString());
                         String s = GsonUtils.toJson(shotEntity);
                         RxLogTool.e("sss", s);
-//                            try {
-//                                tcpClient.sendByteCmd(GsonUtils.toJson(shotEntity).getBytes("GBK"), 2);
-//                            } catch (UnsupportedEncodingException e) {
-//                                e.printStackTrace();
-//                            }
+                        try {
+                            tcpClient.sendStrSocket(s);
+//                            tcpClient.sendByteCmd(GsonUtils.toJson(shotEntity).getBytes("UTF-8"), 2);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 //                        } else {
 //                            handler.sendEmptyMessage(50);
 //                        }
@@ -431,9 +431,11 @@ public class MainActivity extends AppCompatActivity {
                     infoEntity.setType("1");
                     infoEntity.setIsStart(false);
                     try {
-                        tcpClient.sendByteCmd(GsonUtils.toJson(infoEntity).getBytes("GBK"), 3);
+                        //TODO socket通信
+                        tcpClient.sendStrSocket(GsonUtils.toJson(infoEntity));
+//                        tcpClient.sendByteCmd(GsonUtils.toJson(infoEntity).getBytes("GBK"), 3);
                         isSend = false;
-                    } catch (UnsupportedEncodingException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -549,6 +551,21 @@ public class MainActivity extends AppCompatActivity {
             public void onConnectSuccess() {
                 RxToast.showToast("连接成功");
                 activityMainBinding.mainSocket.setText("已连接");
+
+
+                InfoEntity infoEntity = new InfoEntity();
+                infoEntity.setNo(numberNo);
+                infoEntity.setIp(ipAddress);
+                infoEntity.setBullets("10");
+                infoEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
+                infoEntity.setType("1");
+                infoEntity.setIsStart(false);
+                try {
+                    //TODO socket通信
+                    tcpClient.sendStrSocket(GsonUtils.toJson(infoEntity));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -641,6 +658,7 @@ public class MainActivity extends AppCompatActivity {
             tcpClient.connect(string, anInt);
 
 
+
         });
 
 
@@ -693,7 +711,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             str = new String(temp, "GBK");
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return "";
         }
@@ -1199,6 +1216,7 @@ public class MainActivity extends AppCompatActivity {
         if (Shootting) {
             ShotPoints.clear();
             activityMainBinding.mainLight.setText("");
+            Log.e("receiveF01", "receiveF01: "+string);
             int Ligtnum1 = Integer.parseInt(string.substring(4, 8), 16);
 //            int Ligtnum1 = Integer.parseInt("00EE", 16);
             int Ligtnum2 = Integer.parseInt(string.substring(8, 12), 16);
@@ -1331,6 +1349,9 @@ public class MainActivity extends AppCompatActivity {
         targetAdapter.setReportType(RxSPTool.getString(this, "TargetRecordType"), getResources());
     }
 
+    double x = 0.1;
+    double y = 0.1;
+
     /**
      * 初始化折线图
      */
@@ -1354,11 +1375,14 @@ public class MainActivity extends AppCompatActivity {
         //折线图点击事件
         activityMainBinding.mainChart.setOnClickListener(v -> {
             //测试
-            SpeechUtils.getInstance(this).SpeakVoice2("10环");
-            startActivity(new Intent(MainActivity.this, WitnessCheckActivity.class));
+//            SpeechUtils.getInstance(this).SpeakVoice2("10环");
+//            startActivity(new Intent(MainActivity.this, WitnessCheckActivity.class));
 //            startActivity(new Intent(MainActivity.this,PsychologyActivity.class));
 
 
+            x = x + 0.1;
+            y = y + 0.1;
+            tcpClient.sendStrSocket("{\"aimTime\":\"2022-08-11 10:56:14.177\",\"aim_X\":"+x+",\"aim_Y\":"+y+",\"no\":\"5\",\"personName\":\"李某10\",\"ringNumber\":\"0.0\"}");
 
         });
     }
@@ -1587,7 +1611,7 @@ public class MainActivity extends AppCompatActivity {
             // 获取电量
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
             // 设置图片
-            activityMainBinding.tvHomeBattery.setText(level+"%");
+            activityMainBinding.tvHomeBattery.setText(level + "%");
         }
     }
 }

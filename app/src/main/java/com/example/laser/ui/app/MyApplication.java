@@ -40,6 +40,8 @@ public class MyApplication extends Application {
         myApplication = this;
         initFirstData();
         setDatabase();
+//        FaceEngine.init();
+
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.laser.ui.data;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.example.laser.R;
 import com.vondear.rxtool.RxLogTool;
@@ -12,6 +13,7 @@ import java.util.Date;
  * Created by  on 2021/6/29 11:30.
  */
 public class ImgXYCalc {
+    private static final String TAG ="ImgXYCalc" ;
     private Double[] imgXlist;
     private Double[] imgYlist;
 
@@ -65,6 +67,7 @@ public class ImgXYCalc {
 
     public AimCalcData getXYimg(ArrayList<Integer> value, int width, int height, int LastX, int LastY) {
         if (!value.isEmpty()) {
+            Log.e(TAG, "getXYimg: "+value.toString() );
             Double XX = 0.0;
             Double YY = 0.0;
             for (int i = 0; i < value.size(); i++) {

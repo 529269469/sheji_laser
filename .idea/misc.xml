@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/drawable/charts.xml" value="0.1955" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/drawable/shape_longin.xml" value="0.2575" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_bluetooth.xml" value="0.11510416666666666" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_camera2.xml" value="0.18046875" />
@@ -16,6 +17,8 @@
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_to_lead.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/activity_witness_check.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/dialog_loport.xml" value="0.11822916666666666" />
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/dialog_setting.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/fhxh_sheji/app/src/main/res/layout/fragment_system.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects2/laser/app/src/main/res/drawable/shape_bian3.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects2/laser/app/src/main/res/layout/activity_main.xml" value="0.271484375" />
         <entry key="..\:/vm/Android/laser/app/src/main/res/layout/activity_history.xml" value="0.24230295566502463" />

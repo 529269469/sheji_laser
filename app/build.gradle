@@ -55,7 +55,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation project(path: ':seetalibrary')
+//    implementation project(path: ':seetalibrary')
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     // 串口

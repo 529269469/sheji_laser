@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.laser.R;
-import com.example.laser.ui.face.facelogin.FaceLoginActivity;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
 import com.vondear.rxtool.RxActivityTool;
@@ -38,25 +37,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-        PermissionX.init(this)
-                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                 )
-                .request(new RequestCallback() {
-                    @Override
-                    public void onResult(boolean allGranted, @NonNull List<String> grantedList, @NonNull List<String> deniedList) {
-                        if (allGranted) {
-                            RxTool.delayToDo(2000, () -> RxActivityTool.skipActivityAndFinish(LoginActivity.this, FaceLoginActivity.class));
-//        RxTool.delayToDo(2000, () -> RxActivityTool.skipActivityAndFinish(LoginActivity.this,MainActivity.class));
-
-                        } else {
-
-                        }
-                    }
-                });
+        RxTool.delayToDo(2000, () -> RxActivityTool.skipActivityAndFinish(LoginActivity.this,MainActivity.class));
+//        PermissionX.init(this)
+//                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.CAMERA,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE
+//                 )
+//                .request((allGranted, grantedList, deniedList) -> {
+//                    if (allGranted) {
+////                        RxTool.delayToDo(2000, () -> RxActivityTool.skipActivityAndFinish(LoginActivity.this, FaceLoginActivity.class));
+//                         RxTool.delayToDo(2000, () -> RxActivityTool.skipActivityAndFinish(LoginActivity.this,MainActivity.class));
+//
+//                    } else {
+//
+//                    }
+//                });
 
     }
 

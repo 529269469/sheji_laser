@@ -1,7 +1,6 @@
 package com.seeta.sdk;
 
-public class SeetaImageData
-{
+public class SeetaImageData {
     public SeetaImageData(int width, int height, int channels) {
         this.data = new byte[width * height * channels];
         this.width = width;

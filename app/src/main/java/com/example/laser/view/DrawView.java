@@ -142,8 +142,8 @@ public class DrawView extends AppCompatImageView {
         height=532;
         Width=532;
         imgXYCalc = new ImgXYCalc(Width, height, getResources());
-        Log.e(TAG, "onMeasure: height"+height );
-        Log.e(TAG, "onMeasure: Width"+Width );
+//        Log.e(TAG, "onMeasure: height"+height );
+//        Log.e(TAG, "onMeasure: Width"+Width );
         bitmapp.setHeight(height);
         bitmapp.setWidth(Width);
         PlayBackbitmap.setWidth(Width);
@@ -207,11 +207,11 @@ public class DrawView extends AppCompatImageView {
 
                 if (!shootLineDates_.isEmpty()) {
                     for (int i = currentIndex; i < shootLineDates_.size(); i++) {
-                        Log.e(TAG, "onDraw: "+   shootLineDates_.get(i).getTime() );
+//                        Log.e(TAG, "onDraw: "+   shootLineDates_.get(i).getTime() );
 
                         int x = (int) shootLineDates_.get(i).getX();
                         int y = (int) shootLineDates_.get(i).getY();
-                        Log.e(TAG, "onDraw: x:"+  x +"   y:"+y);
+//                        Log.e(TAG, "onDraw: x:"+  x +"   y:"+y);
                         if (i == 0) {
                             path.moveTo(x, y);
                         } else {
