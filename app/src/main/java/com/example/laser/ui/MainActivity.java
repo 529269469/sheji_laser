@@ -322,12 +322,13 @@ public class MainActivity extends AppCompatActivity {
 
                     case 51:
                         if (tcpClient != null && tcpClient.isConnect()) {
+                            ipAddress = NetworkUtils.getIpAddressByWifi();
                             AimCalcData trackValue = activityMainBinding.mainImage.getTrackValue();
                             TrackEntity trackEntity = new TrackEntity();
                             trackEntity.setNo(numberNo);
                             trackEntity.setAim_X(trackValue.getAim_x());
                             trackEntity.setAim_Y(trackValue.getAim_y());
-
+                            trackEntity.setIp(ipAddress);
                             trackEntity.setAimTime(DateTimeFormat.format(trackValue.getTime()));
                             trackEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
                             trackEntity.setRingNumber(String.valueOf(trackValue.getRingNumber()));
@@ -387,6 +388,8 @@ public class MainActivity extends AppCompatActivity {
                         shotEntity.setBullets(bulletNum);
                         shotEntity.setGunType(gunType);
                         shotEntity.setTargetBureauId(activityMainBinding.mainTextJuId.getText().toString());
+                        ipAddress = NetworkUtils.getIpAddressByWifi();
+                        shotEntity.setIp(ipAddress);
                         String s = GsonUtils.toJson(shotEntity);
                         RxLogTool.e("sss", s);
                         try {
@@ -422,22 +425,9 @@ public class MainActivity extends AppCompatActivity {
             boolean isSend = true;
             while (isSend) {
                 if (tcpClient != null && tcpClient.isConnect()) {
+                    sendSocketBasic();
+                    isSend = false;
 
-                    InfoEntity infoEntity = new InfoEntity();
-                    infoEntity.setNo(numberNo);
-                    infoEntity.setIp(ipAddress);
-                    infoEntity.setBullets("10");
-                    infoEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
-                    infoEntity.setType("1");
-                    infoEntity.setIsStart(false);
-                    try {
-                        //TODO socket通信
-                        tcpClient.sendStrSocket(GsonUtils.toJson(infoEntity));
-//                        tcpClient.sendByteCmd(GsonUtils.toJson(infoEntity).getBytes("GBK"), 3);
-                        isSend = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
                 try {
                     Thread.sleep(10);
@@ -552,20 +542,7 @@ public class MainActivity extends AppCompatActivity {
                 RxToast.showToast("连接成功");
                 activityMainBinding.mainSocket.setText("已连接");
 
-
-                InfoEntity infoEntity = new InfoEntity();
-                infoEntity.setNo(numberNo);
-                infoEntity.setIp(ipAddress);
-                infoEntity.setBullets("10");
-                infoEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
-                infoEntity.setType("1");
-                infoEntity.setIsStart(false);
-                try {
-                    //TODO socket通信
-                    tcpClient.sendStrSocket(GsonUtils.toJson(infoEntity));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sendSocketBasic();
             }
 
             @Override
@@ -693,6 +670,30 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
+    }
+
+    /**
+     * 向总控发送基本信息
+     */
+    public void sendSocketBasic(){
+        ipAddress = NetworkUtils.getIpAddressByWifi();
+        InfoEntity infoEntity = new InfoEntity();
+        infoEntity.setMainTextJuId(activityMainBinding.mainTextJuId.getText().toString());
+        infoEntity.setNo(numberNo);
+        infoEntity.setIp(ipAddress);
+        infoEntity.setBullets("10");
+        infoEntity.setPersonName(activityMainBinding.mainEditPersonName.getText().toString());
+        infoEntity.setType("1");
+        infoEntity.setMain_text_all_num(activityMainBinding.mainTextAllNum.getText().toString());
+        infoEntity.setMain_text_gun_type(activityMainBinding.mainTextGunType.getText().toString());
+        infoEntity.setMain_text_surplus_num(activityMainBinding.mainTextSurplusNum.getText().toString());
+        infoEntity.setIsStart(false);
+        try {
+            //TODO socket通信
+            tcpClient.sendStrSocket(GsonUtils.toJson(infoEntity));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -919,10 +920,11 @@ public class MainActivity extends AppCompatActivity {
                     if (!isGpioK7Read && !isGpioK8Read) {
                         isGpioK7Read = true;
                         isGpioK8Read = true;
-                        initSerial();
                         activityMainBinding.mainLo.setText(gunNo.getSelectedItem().toString());
                         RxSPTool.putString(MainActivity.this, api.number, gunNo.getSelectedItem().toString());
                         RxSPTool.putString(MainActivity.this, api.channel, DataUtils.Completion1(DataUtils.IntToHex(group * 10 + gun)));
+                        numberNo = RxSPTool.getString(this, api.number);
+
                         alertDialog.dismiss();
                         break;
                     }
@@ -972,6 +974,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(RockerMessage string) {
+        RxLogTool.e("RockerMessage--", string.getName()+string.getMessage());
         if (string.getName().equals("D01")) {
 //            RxLogTool.e("D01--", string.getMessage());
             receiveD01(string.getMessage());
@@ -981,19 +984,19 @@ public class MainActivity extends AppCompatActivity {
             receiveF01(string.getMessage());
         } else if (string.getName().equals("G01")) {
             String message = string.getMessage();
+//            RxLogTool.e("G01", message);
             if (message.equals(sendGpioData.toUpperCase())) {
                 isGpioK8Read = false;
                 SerialGpioManager.instance().close();
                 lztek.setGpioValue(api.k8, 0);
-//                RxLogTool.e("G01", message);
             }
         } else if (string.getName().equals("G02")) {
             String message = string.getMessage();
+//            RxLogTool.e("G02", message);
             if (Objects.equals(message, sendGpioData.toUpperCase())) {
                 isGpioK7Read = false;
                 SerialGpioK7Manager.instance().close();
                 lztek.setGpioValue(api.k7, 0);
-//                RxLogTool.e("G02", message);
             }
         } else if (string.getName().equals("GD01")) {
             RxLogTool.e(ATAG, "打靶延时100000S");
@@ -1046,21 +1049,6 @@ public class MainActivity extends AppCompatActivity {
 
         activityMainBinding.mainImage.setShot(false);
         if (state == 128 || state == 192) {
-
-//            if (state == 128) {
-//                curMode = "1";
-//                if (reMode.equals(curMode)) {
-//                    isRevice = true;
-//                    curMode = "0";
-//                }
-//            } else {
-//                curMode = "2";
-//                if (reMode.equals(curMode)) {
-//                    isRevice = true;
-//                    curMode = "0";
-//                }
-//            }
-
             if (!Shootting) {
                 isShottingFirst = true;
                 if (isShottingFirst) {        //开始打靶
@@ -1079,15 +1067,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if (state == 64) {
-//            if (isShottingFirst) {
-//                handler.sendEmptyMessageDelayed(6, 1000);    //打靶延时1s结束
-//                isShottingFirst = false;
-//                activityMainBinding.mainImage.setShot(false);
-//                RxLogTool.e(ATAG,"打靶延时1S");
-//            }
-
-            // 等于64 代表当前是统一训练模式
-
             curMode = "2";
             if (reMode.equals(curMode)) {
                 isRevice = true;
@@ -1216,7 +1195,7 @@ public class MainActivity extends AppCompatActivity {
         if (Shootting) {
             ShotPoints.clear();
             activityMainBinding.mainLight.setText("");
-            Log.e("receiveF01", "receiveF01: "+string);
+//            Log.e("receiveF01", "receiveF01: "+string);
             int Ligtnum1 = Integer.parseInt(string.substring(4, 8), 16);
 //            int Ligtnum1 = Integer.parseInt("00EE", 16);
             int Ligtnum2 = Integer.parseInt(string.substring(8, 12), 16);
@@ -1279,7 +1258,7 @@ public class MainActivity extends AppCompatActivity {
                 activityMainBinding.mainImage.setDate(ShotPoints, false);
 //                RxLogTool.e("接收到初始数据时间2", System.currentTimeMillis());
                 activityMainBinding.mainImage.postInvalidate();
-                RxLogTool.e("接收到初始数据时间", System.currentTimeMillis());
+//                RxLogTool.e("接收到初始数据时间", System.currentTimeMillis());
                 RefushLineChart();
 
                 /**
@@ -1382,7 +1361,15 @@ public class MainActivity extends AppCompatActivity {
 
             x = x + 0.1;
             y = y + 0.1;
-            tcpClient.sendStrSocket("{\"aimTime\":\"2022-08-11 10:56:14.177\",\"aim_X\":"+x+",\"aim_Y\":"+y+",\"no\":\"5\",\"personName\":\"李某10\",\"ringNumber\":\"0.0\"}");
+            tcpClient.sendStrSocket("{\n" +
+                    "  \"aimTime\": \"2022-08-10 10:48:28.718\",\n" +
+                    "  \"aim_X\": "+x+",\n" +
+                    "  \"aim_Y\": "+y+",\n" +
+                    "  \"no\": \"5\",\n" +
+                    "  \"personName\": \"李某10\",\n" +
+                    "  \"ringNumber\": \"0.0\",\n" +
+                    "  \"ip\": \"192.168.31.154\",\n" +
+                    "}");
 
         });
     }

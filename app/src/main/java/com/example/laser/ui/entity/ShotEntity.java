@@ -26,6 +26,15 @@ public class ShotEntity {
     private String targetBureauId;
     private String targetAllNums;
     private String gunType;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getNo() {
         return no;

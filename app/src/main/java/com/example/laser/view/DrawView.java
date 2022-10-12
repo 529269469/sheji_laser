@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Created by  on 2021/6/14.
@@ -139,8 +140,8 @@ public class DrawView extends AppCompatImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //        Width = MeasureSpec.getSize(widthMeasureSpec);
 //        height = MeasureSpec.getSize(heightMeasureSpec);
-        height=532;
-        Width=532;
+        height = 532;
+        Width = 532;
         imgXYCalc = new ImgXYCalc(Width, height, getResources());
 //        Log.e(TAG, "onMeasure: height"+height );
 //        Log.e(TAG, "onMeasure: Width"+Width );
@@ -211,7 +212,6 @@ public class DrawView extends AppCompatImageView {
 
                         int x = (int) shootLineDates_.get(i).getX();
                         int y = (int) shootLineDates_.get(i).getY();
-//                        Log.e(TAG, "onDraw: x:"+  x +"   y:"+y);
                         if (i == 0) {
                             path.moveTo(x, y);
                         } else {
@@ -221,7 +221,71 @@ public class DrawView extends AppCompatImageView {
                                 }
                             } else {
                                 if (shootLineDates_.get(i).getX() != -1) {
+//                                    Random random = new Random();
+//                                    int top_X = shootLineDates_.get(i - 1).getX();
+//                                    int top_y = shootLineDates_.get(i - 1).getY();
+//                                    List<Integer> xxList = new ArrayList<>();
+//                                    List<Integer> yyList = new Ar//                                    int xxx = x;rayList<>();
+//                                    int yyy = y;
+//                                    if (x > top_X) {
+//                                        xxx = (x - top_X) / 3 + top_X;
+//                                        for (int j = 0; j < 3; j++) {
+//                                            int min = xxx - 2;
+//                                            int max = xxx + 2;
+//                                            int num = random.nextInt(max) % (max - min + 1) + min;
+//                                            xxList.add(num);
+//                                        }
+//
+//                                        if (y > top_y) {
+//                                            yyy = (y - top_y) / 3 + top_y;
+//                                            for (int j = 0; j < 3; j++) {
+//                                                int min = yyy - 2;
+//                                                int max = yyy + 2;
+//                                                int num = random.nextInt(max) % (max - min + 1) + min;
+//                                                yyList.add(num);
+//                                            }
+//                                        } else {
+//                                            yyy = y - (top_y - y) / 3;
+//                                            for (int j = 0; j < 3; j++) {
+//                                                int min = yyy - 2;
+//                                                int max = yyy + 2;
+//                                                int num = random.nextInt(max) % (max - min + 1) + min;
+//                                                yyList.add(num);
+//                                            }
+//                                        }
+//                                    } else {
+//                                        xxx = top_X - (top_X - x) / 3;
+//                                        for (int j = 0; j < 3; j++) {
+//                                            int min = xxx - 2;
+//                                            int max = xxx + 2;
+//                                            int num = random.nextInt(max) % (max - min + 1) + min;
+//                                            xxList.add(num);
+//                                        }
+//                                        if (y > top_y) {
+//                                            yyy = (y - top_y) / 3 + top_y;
+//                                            for (int j = 0; j < 3; j++) {
+//                                                int min = yyy - 2;
+//                                                int max = yyy + 2;
+//                                                int num = random.nextInt(max) % (max - min + 1) + min;
+//                                                yyList.add(num);
+//                                            }
+//                                        } else {
+//                                            yyy = y - (top_y - y) / 3;
+//                                            for (int j = 0; j < 3; j++) {
+//                                                int min = yyy - 2;
+//                                                int max = yyy + 2;
+//                                                int num = random.nextInt(max) % (max - min + 1) + min;
+//                                                yyList.add(num);
+//                                            }
+//                                        }
+//                                    }
+//
+//                                    for (int j = 0; j < xxList.size(); j++) {
+//                                        path.lineTo(xxList.get(j), yyList.get(j));
+//                                    }
+
                                     path.lineTo(x, y);
+
                                 }
                             }
                         }
@@ -233,7 +297,7 @@ public class DrawView extends AppCompatImageView {
                             (int) shootLineDates_.get(shootLineDates_.size() - 1).getY());
                 }
                 if (!shootDates.isEmpty()) {
-                    RxLogTool.e(TAG, SelectIndex);
+//                    RxLogTool.e(TAG, SelectIndex);
                     if (SelectIndex == -1) {
                         if (shootDates.size() < 2) {
                             int xx = (int) shootDates.get(shootDates.size() - 1).getX();
@@ -251,14 +315,14 @@ public class DrawView extends AppCompatImageView {
                             }
                         } else {
 
-                            RxLogTool.e(TAG, "总打靶数据" + shootDates.size());
+//                            RxLogTool.e(TAG, "总打靶数据" + shootDates.size());
                             for (int i = shootDates.size() - 1; i >= 0; i--) {
-                                RxLogTool.e(TAG,"循环的i"+i);
+//                                RxLogTool.e(TAG, "循环的i" + i);
                                 int x = (int) shootDates.get(i).getX();
                                 int y = ((int) shootDates.get(i).getY());
                                 if (x != -1) {
                                     if (i == shootDates.size() - 1) {
-                                        RxLogTool.e(TAG,"相同 花红色");
+//                                        RxLogTool.e(TAG, "相同 花红色");
                                         imgcanvas.drawBitmap(bitmap1, x - width1, y - height1, paint);
                                     } else {
                                         imgcanvas.drawBitmap(bitmap, x - width, y - height, paint);

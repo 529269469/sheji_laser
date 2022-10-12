@@ -57,18 +57,19 @@
         <activity
             android:name=".ui.face.facelogin.ToLeadActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.face.WitnessCheckActivity"
-            android:screenOrientation="landscape"/>
+
         <activity
             android:name=".ui.PsychologyActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.face.facelogin.FaceLoginActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape">
+
+
+        </activity>
 
         <activity
-            android:name=".ui.face.facelogin.LoginActivity"
+            android:name=".ui.face.facelogin.LoginFaceActivity"
             android:screenOrientation="landscape" />
 
         <activity

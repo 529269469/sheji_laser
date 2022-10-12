@@ -11,9 +11,18 @@ public class TrackEntity {
     private String no;
     private String personName;
     private String aimTime;
+    private String ip;
     private double aim_X;
     private double aim_Y;
     private String ringNumber;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getNo() {
         return no;

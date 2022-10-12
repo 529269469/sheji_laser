@@ -18,6 +18,7 @@
 //        //SeetaImageData大小与原图像一致，但是通道数为3个通道即BGR
 //        SeetaImageData imageData = new SeetaImageData(bmp_src.getWidth(), bmp_src.getHeight(), 3);
 //        imageData.data = getPixelsBGR(bmp_src);
+//
 //        return imageData;
 //    }
 //

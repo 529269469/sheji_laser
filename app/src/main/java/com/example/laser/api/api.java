@@ -18,9 +18,9 @@ public class api {
 
     public static String port = "port";  // 端口号
 
-    public static String number = "number";  //
+    public static String number = "number";  //枪号
 
-    public static String channel = "channel"; // 信道
+    public static String channel = "channel"; //组号
 
     public static int detect = 3000;
 

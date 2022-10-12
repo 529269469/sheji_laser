@@ -20,6 +20,7 @@
 //import androidx.appcompat.app.AppCompatActivity;
 //
 //import com.example.laser.R;
+//import com.example.laser.ui.LoginActivity;
 //import com.example.laser.ui.MainActivity;
 //import com.example.laser.utils.BitmapUtils;
 //import com.example.laser.utils.GlideEngine;
@@ -62,7 +63,7 @@
 //                break;
 //            case R.id.bt_facelogin:
 //                //人脸登录
-//                gotoActivity(LoginActivity.class);
+//                gotoActivity(LoginFaceActivity.class);
 //                break;
 //            case R.id.bt_facelogins:
 //                //导入数据

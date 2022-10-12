@@ -49,7 +49,6 @@
 //        faceInitCameraView.setPreviewCallback(new FaceCameraView.PreviewCallback() {
 //            @Override
 //            public void onPreview(final byte[] data, final Camera camera) {
-//                Log.e(TAG, "initView: ");
 //                if (FaceEngine.FACEDETECTOR != null && FaceEngine.FACERECOGNIZER != null && FaceEngine.POINTDETECTOR != null) {
 //                    new Thread(new Runnable() {
 //                        @Override

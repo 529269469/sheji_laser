@@ -67,7 +67,7 @@ public class ImgXYCalc {
 
     public AimCalcData getXYimg(ArrayList<Integer> value, int width, int height, int LastX, int LastY) {
         if (!value.isEmpty()) {
-            Log.e(TAG, "getXYimg: "+value.toString() );
+//            Log.e(TAG, "getXYimg: "+value.toString() );
             Double XX = 0.0;
             Double YY = 0.0;
             for (int i = 0; i < value.size(); i++) {
@@ -163,7 +163,7 @@ public class ImgXYCalc {
     }
 
     private double[] getRingNumber(int x, int y) {
-        RxLogTool.e("getRingNumber",x+"   "+ y);
+//        RxLogTool.e("getRingNumber",x+"   "+ y);
         double[] result = new double[4];
         double RingNumber = 0.0;
         double XRingNumber = 0.0;

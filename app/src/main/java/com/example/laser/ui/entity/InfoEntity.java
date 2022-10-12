@@ -10,7 +10,44 @@ public class InfoEntity {
     private String bullets;
     private String personName;
     private String type;
+    private String mainTextJuId;
+    private String main_text_gun_type;//枪型
+    private String main_text_all_num;//总发数
+    private String main_text_surplus_num;//子弹数
+
+    public String getMain_text_gun_type() {
+        return main_text_gun_type;
+    }
+
+    public void setMain_text_gun_type(String main_text_gun_type) {
+        this.main_text_gun_type = main_text_gun_type;
+    }
+
+    public String getMain_text_all_num() {
+        return main_text_all_num;
+    }
+
+    public void setMain_text_all_num(String main_text_all_num) {
+        this.main_text_all_num = main_text_all_num;
+    }
+
+    public String getMain_text_surplus_num() {
+        return main_text_surplus_num;
+    }
+
+    public void setMain_text_surplus_num(String main_text_surplus_num) {
+        this.main_text_surplus_num = main_text_surplus_num;
+    }
+
     private boolean isStart;
+
+    public String getMainTextJuId() {
+        return mainTextJuId;
+    }
+
+    public void setMainTextJuId(String mainTextJuId) {
+        this.mainTextJuId = mainTextJuId;
+    }
 
     public String getNo() {
         return no;

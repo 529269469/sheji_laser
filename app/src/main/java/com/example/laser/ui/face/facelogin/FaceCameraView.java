@@ -89,18 +89,27 @@ public class FaceCameraView extends SurfaceView implements SurfaceHolder.Callbac
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int cameraId = 0; cameraId < Camera.getNumberOfCameras(); cameraId++) {
             Camera.getCameraInfo(cameraId, cameraInfo);
+            Log.e("TAG", "openCamera: "+cameraId );
             //打开前置摄像头
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                try {
-                    mCamera = Camera.open(cameraId);
-                } catch (Exception e) {
-                    if (mCamera != null) {
-                        mCamera.release();
-                        mCamera = null;
-                    }
+            try {
+                mCamera = Camera.open(cameraId);
+            } catch (Exception e) {
+                if (mCamera != null) {
+                    mCamera.release();
+                    mCamera = null;
                 }
-                break;
             }
+//            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//                try {
+//                    mCamera = Camera.open(cameraId);
+//                } catch (Exception e) {
+//                    if (mCamera != null) {
+//                        mCamera.release();
+//                        mCamera = null;
+//                    }
+//                }
+//                break;
+//            }
         }
     }
 
